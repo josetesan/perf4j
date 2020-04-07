@@ -15,12 +15,14 @@
  */
 package org.perf4j.slf4j;
 
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.joran.spi.ConsoleTarget;
 import org.perf4j.LoggingStopWatch;
 import org.perf4j.LoggingStopWatchTest;
 import org.slf4j.LoggerFactory;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.PatternLayout;
-import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.ConsoleAppender;
 
 /**
@@ -29,17 +31,17 @@ import ch.qos.logback.core.ConsoleAppender;
 public class Slf4JStopWatchTest extends LoggingStopWatchTest {
     
     private ch.qos.logback.classic.Logger rootLogger;
-    private ConsoleAppender<LoggingEvent> consoleAppender;
+    private ConsoleAppender<ILoggingEvent> consoleAppender;
 
     protected void setUp() throws Exception {
         super.setUp();
         LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
         
-        rootLogger = lc.getLogger(LoggerContext.ROOT_NAME);
-        consoleAppender = new ConsoleAppender<LoggingEvent>();
+        rootLogger = lc.getLogger(Logger.ROOT_LOGGER_NAME);
+        consoleAppender = new ConsoleAppender<>();
         consoleAppender.setName("stderr");
         consoleAppender.setContext(lc);
-        consoleAppender.setTarget(ConsoleAppender.SYSTEM_ERR);
+        consoleAppender.setTarget(ConsoleTarget.SystemErr.name());
         PatternLayout pl = new PatternLayout();
         pl.setContext(lc);
         pl.setPattern("%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n");

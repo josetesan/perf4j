@@ -23,6 +23,7 @@ import org.apache.log4j.xml.DOMConfigurator;
 import org.perf4j.StopWatch;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
@@ -116,8 +117,8 @@ public class AppenderTest extends TestCase {
         }
 
         //at this point none of the file appenders will have written anything because they haven't been flushed
-        assertEquals("", FileUtils.readFileToString(new File("target/stats-shutdownbug.log")));
-        assertEquals("", FileUtils.readFileToString(new File("target/graphs-shutdownbug.log")));
+        assertEquals("", FileUtils.readFileToString(new File("target/stats-shutdownbug.log"), StandardCharsets.UTF_8));
+        assertEquals("", FileUtils.readFileToString(new File("target/graphs-shutdownbug.log"), StandardCharsets.UTF_8));
 
         //now, to simulate shutdown, get the async appender and run the shutdown hook. We need to use reflection
         //because the shutdown hook is private.
@@ -132,8 +133,8 @@ public class AppenderTest extends TestCase {
         shutdownHook.run();
 
         //now there should be data in the files
-        assertFalse("".equals(FileUtils.readFileToString(new File("target/stats-shutdownbug.log"))));
-        assertFalse("".equals(FileUtils.readFileToString(new File("target/graphs-shutdownbug.log"))));
+        assertFalse("".equals(FileUtils.readFileToString(new File("target/stats-shutdownbug.log"), StandardCharsets.UTF_8)));
+        assertFalse("".equals(FileUtils.readFileToString(new File("target/graphs-shutdownbug.log"), StandardCharsets.UTF_8)));
 
         // closing should remove shutdown hook
         appender.close();
@@ -181,7 +182,7 @@ public class AppenderTest extends TestCase {
 
         //verify the statisticsLog.csv file
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        for (Object line : FileUtils.readLines(new File("./target/statisticsLog.csv"))) {
+        for (Object line : FileUtils.readLines(new File("./target/statisticsLog.csv"), StandardCharsets.UTF_8)) {
             String[] values = line.toString().split(",");
             //first column is the tag
             assertEquals("\"csvTest\"", values[0]);
@@ -201,7 +202,7 @@ public class AppenderTest extends TestCase {
         }
 
         //verify the pivotedStatisticsLog.csv file
-        for (Object line : FileUtils.readLines(new File("./target/pivotedStatisticsLog.csv"))) {
+        for (Object line : FileUtils.readLines(new File("./target/pivotedStatisticsLog.csv"), StandardCharsets.UTF_8)) {
             String[] values = line.toString().split(",");
             //first 2 columns are the dates - ensure they can be parsed
             assertTrue(dateFormat.parse(values[0]).before(dateFormat.parse(values[1])));

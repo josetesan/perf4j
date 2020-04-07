@@ -17,6 +17,8 @@ package org.perf4j.logback;
 
 
 import java.io.File;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
@@ -121,7 +123,7 @@ public class AppenderTest extends TestCase {
         //verify the statisticsLog.csv file
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         for (Object line : FileUtils.readLines(new File(
-                "./target/statisticsLogback.csv"))) {
+                "./target/statisticsLogback.csv"), StandardCharsets.UTF_8)) {
             String[] values = line.toString().split(",");
             //first column is the tag
             assertEquals("\"csvTest\"", values[0]);
@@ -141,7 +143,7 @@ public class AppenderTest extends TestCase {
         }
 
         //verify the pivotedStatisticsLog.csv file
-        for (Object line : FileUtils.readLines(new File("./target/pivotedStatisticsLog.csv"))) {
+        for (Object line : FileUtils.readLines(new File("./target/pivotedStatisticsLog.csv"),StandardCharsets.UTF_8)) {
             String[] values = line.toString().split(",");
             //first 2 columns are the dates - ensure they can be parsed
             assertTrue(dateFormat.parse(values[0]).before(dateFormat.parse(values[1])));

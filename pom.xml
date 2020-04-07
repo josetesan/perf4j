@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.perf4j</groupId>
+    <groupId>com.josetesan</groupId>
     <artifactId>perf4j</artifactId>
-    <version>0.9.17-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>Perf4J</name>
@@ -140,9 +140,9 @@
     </contributors>
 
     <scm>
-        <url>http://github.com/perf4j/perf4j</url>
-        <connection>scm:git:git://github.com/perf4j/perf4j.git</connection>
-        <developerConnection>scm:git:git://github.com/perf4j/perf4j.git</developerConnection>
+        <url>http://github.com/josetesan/perf4j</url>
+        <connection>scm:git:git://github.com/josetesan/perf4j.git</connection>
+        <developerConnection>scm:git:git://github.com/josetesan/perf4j.git</developerConnection>
     </scm>
 
     <repositories>
@@ -193,10 +193,13 @@
 
     <properties>
         <!-- this property is used by the apt files in src/site/apt -->
-        <currentProductionVersion>0.9.16</currentProductionVersion>
-        <currentSnapshotVersion>0.9.17-SNAPSHOT</currentSnapshotVersion>
+        <currentProductionVersion>1.0.0</currentProductionVersion>
+        <currentSnapshotVersion>1.0.0</currentSnapshotVersion>
         <git.executable>git</git.executable>
-        <aspectjVersion>1.6.11</aspectjVersion>
+        <java.version>8</java.version>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <aspectjVersion>1.9.5</aspectjVersion>
     </properties>
 
     <profiles>
@@ -218,7 +221,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>aspectj-maven-plugin</artifactId>
-                        <version>1.4</version>
+                        <version>1.11</version>
                         <dependencies>
                             <dependency>
                                 <groupId>org.aspectj</groupId>
@@ -227,8 +230,13 @@
                             </dependency>
                         </dependencies>
                         <configuration>
-                                <source>1.5</source>
-                                <target>1.5</target>
+                                <complianceLevel>1.8</complianceLevel>
+                                <source>1.8</source>
+                                <target>1.8</target>
+                            <showWeaveInfo>true</showWeaveInfo>
+                            <verbose>true</verbose>
+                            <Xlint>ignore</Xlint>
+                            <encoding>UTF-8 </encoding>
                         </configuration>
                         <executions>
                             <execution>
@@ -249,7 +257,7 @@
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
-            <version>1.2.14</version>
+            <version>1.2.17</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
@@ -258,7 +266,7 @@
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>1.0.3</version>
+            <version>1.1.1</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
@@ -267,7 +275,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.5.6</version>
+            <version>1.7.30</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
@@ -276,7 +284,7 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>0.9.15</version>
+            <version>1.2.3</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
@@ -285,7 +293,7 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
-            <version>2.4</version>
+            <version>2.5</version>
             <scope>provided</scope>
         </dependency>
 
@@ -328,46 +336,40 @@
         <!-- if you use Spring to manage the AOP funcionality, you must also include these following dependencies -->
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring</artifactId>
-            <version>2.0.6</version>
+            <artifactId>spring-aop</artifactId>
+            <version>5.2.5.RELEASE</version>
             <scope>compile</scope>
             <optional>true</optional>
         </dependency>
 
-        <dependency>
-            <groupId>cglib</groupId>
-            <artifactId>cglib</artifactId>
-            <version>2.1_3</version>
-            <scope>compile</scope>
-            <optional>true</optional>
-        </dependency>
+
 
         <!-- The following dependencies are required for testing only -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.6.1</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-mock</artifactId>
-            <version>2.0.6</version>
+            <artifactId>spring-test</artifactId>
+            <version>5.2.5.RELEASE</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>commons-httpclient</groupId>
-            <artifactId>commons-httpclient</artifactId>
-            <version>3.1</version>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.12</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>1.3.2</version>
+            <version>2.6</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -378,10 +380,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.8.1</version>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
 
@@ -389,14 +391,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-release-plugin</artifactId>
-                <version>2.2.1</version>
+                <version>2.5.3</version>
             </plugin>
 
             <!-- When deploying tell Maven not to create unique binaries for each snapshot -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <version>2.7</version>
+                <version>2.8.2</version>
                 <inherited>true</inherited>
                 <configuration>
                     <uniqueVersion>false</uniqueVersion>
@@ -407,14 +409,14 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>emma-maven-plugin</artifactId>
-                <version>1.0-alpha-1</version>
+                <version>1.0-alpha-3</version>
                 <inherited>true</inherited>
             </plugin>
 
             <!-- Genearate a javadoc jar when deploying -->
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.1</version>
+                <version>3.2.0</version>
                 <inherited>true</inherited>
                 <configuration>
                     <links>
@@ -442,7 +444,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.1.2</version>
+                <version>3.2.1</version>
                 <inherited>true</inherited>
                 <executions>
                     <execution>
@@ -459,15 +461,16 @@
 
             <!-- Tell maven to generate a version.properties files from SVN -->
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
                 <executions>
-
                     <execution>
                         <id>build-versions-file</id>
                         <phase>compile</phase>
                         <inherited>false</inherited>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <mkdir dir="${project.build.directory}" />
                                 <exec executable="${git.executable}" output="${project.build.directory}/version.properties">
                                     <arg value="log" />
@@ -478,7 +481,7 @@
                                     perf4j.version=${project.version}
                                 </echo>
                                 <fixcrlf srcdir="${project.build.directory}" eol="lf" includes="version.properties" />
-                            </tasks>
+                            </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>
@@ -498,7 +501,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.2.0</version>
                 <!--
                   The main jar includes all classes and generates a META-INF manifest file that species
                   LogParser as the jar's main class
@@ -604,7 +607,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.3</version>
+                <version>2.22.2</version>
                 <inherited>true</inherited>
                 <configuration>
                     <forkMode>once</forkMode>
@@ -627,7 +630,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
-                <version>3.0</version>
+                <version>3.9.0</version>
             </plugin>
         </plugins>
 
@@ -646,7 +649,7 @@
             <!-- Add the javadoc to the reporting section in the maven site -->
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.8</version>
+                <version>3.2.0</version>
                 <configuration>
                     <attach>true</attach>
                     <links>
@@ -663,16 +666,16 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>emma-maven-plugin</artifactId>
-                <version>1.0-alpha-1</version>
+                <version>1.0-alpha-3</version>
             </plugin>
 
             <!-- Add the test results to the site -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.9</version>
+                <version>2.22.2</version>
                 <configuration>
-                    <argLine>-Xmx512m</argLine>
+                    <argLine>-Xmx768m</argLine>
                 </configuration>
             </plugin>
 
@@ -680,7 +683,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jxr-plugin</artifactId>
-                <version>2.3</version>
+                <version>3.0.0</version>
             </plugin>
         </plugins>
     </reporting>

@@ -18,6 +18,7 @@ package org.perf4j;
 import org.apache.commons.io.FileUtils;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Test the LogParser class, as well as the StopWatchLogIterator class and main method.
@@ -33,63 +34,62 @@ public class LogParserTest extends TimingTestCase {
             realOut.println("-- Usage Test --");
             LogParser.runMain(new String[]{"--help"});
             realOut.println(fakeOut.toString());
-            assertTrue(fakeOut.toString().indexOf("Usage") >= 0);
+            assertTrue(fakeOut.toString().contains("Usage"));
             fakeOut.reset();
 
             //log on std in, write to std out
             InputStream realIn = System.in;
             ByteArrayInputStream fakeIn = new ByteArrayInputStream(testLog.getBytes());
             System.setIn(fakeIn);
+            boolean condition = fakeOut.toString().contains("tag") &&
+                    fakeOut.toString().contains("tag2") &&
+                    fakeOut.toString().contains("tag3");
             try {
                 realOut.println("-- Std in -> Std out Test --");
                 LogParser.runMain(new String[0]);
                 realOut.println(fakeOut.toString());
-                assertTrue(fakeOut.toString().indexOf("tag") >= 0 &&
-                           fakeOut.toString().indexOf("tag2") >= 0 &&
-                           fakeOut.toString().indexOf("tag3") >= 0);
+                assertTrue(condition);
                 fakeOut.reset();
             } finally {
                 System.setIn(realIn);
             }
 
             //Log from a file
-            FileUtils.writeStringToFile(new File("./target/logParserTest.log"), testLog);
+            FileUtils.writeStringToFile(new File("./target/logParserTest.log"), testLog,StandardCharsets.UTF_8);
 
             //log from file, write to std out
             realOut.println("-- File in -> Std out Test --");
             LogParser.runMain(new String[]{"./target/logParserTest.log"});
             realOut.println(fakeOut.toString());
-            assertTrue(fakeOut.toString().indexOf("tag") >= 0 &&
-                       fakeOut.toString().indexOf("tag2") >= 0 &&
-                       fakeOut.toString().indexOf("tag3") >= 0);
+            assertTrue(condition);
             fakeOut.reset();
 
             //CSV format test
             realOut.println("-- File in -> Std out Test with CSV --");
             LogParser.runMain(new String[]{"-f", "csv", "./target/logParserTest.log"});
             realOut.println(fakeOut.toString());
-            assertTrue(fakeOut.toString().indexOf("\"tag\",") >= 0 &&
-                       fakeOut.toString().indexOf("\"tag2\",") >= 0 &&
-                       fakeOut.toString().indexOf("\"tag3\",") >= 0);
+            assertTrue(fakeOut.toString().contains("\"tag\",") &&
+                    fakeOut.toString().contains("\"tag2\",") &&
+                    fakeOut.toString().contains("\"tag3\","));
             fakeOut.reset();
 
             //log from file, write to file
             realOut.println("-- File in -> File out Test --");
             LogParser.runMain(new String[]{"-o", "./target/statistics.out", "./target/logParserTest.log"});
-            String statsOut = FileUtils.readFileToString(new File("./target/statistics.out"));
+            String statsOut = FileUtils.readFileToString(new File("./target/statistics.out"),StandardCharsets.UTF_8);
             realOut.println(statsOut);
-            assertTrue(statsOut.indexOf("tag") >= 0 &&
-                       statsOut.indexOf("tag2") >= 0 &&
-                       statsOut.indexOf("tag3") >= 0);
+            assertTrue(statsOut.contains("tag") &&
+                    statsOut.contains("tag2") &&
+                    statsOut.contains("tag3"));
 
             //log from file, write to file, different timeslice
             realOut.println("-- File in -> File out with different timeslice Test --");
             LogParser.runMain(new String[]{"-o", "./target/statistics.out", "--timeslice", "120000", "./target/logParserTest.log"});
-            statsOut = FileUtils.readFileToString(new File("./target/statistics.out"));
+            statsOut = FileUtils.readFileToString(new File("./target/statistics.out"),StandardCharsets.UTF_8);
             realOut.println(statsOut);
-            assertTrue(statsOut.indexOf("tag") >= 0 &&
-                       statsOut.indexOf("tag2") >= 0 &&
-                       statsOut.indexOf("tag3") >= 0);
+            assertTrue(statsOut.contains("tag") &&
+                    statsOut.contains("tag2") &&
+                    statsOut.contains("tag3"));
 
             //missing param test
             realOut.println("-- Missing param test --");
@@ -99,16 +99,16 @@ public class LogParserTest extends TimingTestCase {
             realOut.println("-- Unknown arg test --");
             assertEquals(1, LogParser.runMain(new String[]{"./target/logParserTest.log", "--foo"}));
             realOut.println(fakeOut);
-            assertTrue(fakeOut.toString().indexOf("Unknown") >= 0);
+            assertTrue(fakeOut.toString().contains("Unknown"));
 
             //graphing test
             realOut.println("-- File in -> File out with graphing --");
             LogParser.runMain(new String[]{"-o", "./target/statistics.out",
                                            "-g", "./target/perfGraphs.out",
                                            "./src/test/resources/org/perf4j/dummyLog.txt"});
-            statsOut = FileUtils.readFileToString(new File("./target/statistics.out"));
+            statsOut = FileUtils.readFileToString(new File("./target/statistics.out"),StandardCharsets.UTF_8);
             realOut.println(statsOut);
-            String graphsOut = FileUtils.readFileToString(new File("./target/perfGraphs.out"));
+            String graphsOut = FileUtils.readFileToString(new File("./target/perfGraphs.out"), StandardCharsets.UTF_8);
             realOut.println(graphsOut);
             assertTrue(graphsOut.indexOf("chtt=TPS") > 0 && graphsOut.indexOf("chtt=Mean") > 0);
         } finally {

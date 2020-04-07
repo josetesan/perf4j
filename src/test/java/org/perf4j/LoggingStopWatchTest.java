@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Tests the LoggingStopWatch. Can also be used to test subclasses if the loggers are set up to log to stderr.
@@ -97,11 +98,11 @@ public class LoggingStopWatchTest extends TestCase {
 
         //test for PERFFORJ-30 - Add capability to set a time threshold in LoggingStopWatch and Profiled annotation
         stopWatch.stop();
-        String fakeErrBefore = fakeErr.toString();
+        String fakeErrBefore = fakeErr.toString(StandardCharsets.UTF_8);
         stopWatch.setTimeThreshold(100).start("timeThresholdCheck");
         Thread.sleep(10);
         stopWatch.stop();
-        assertEquals("Stopwatch log was set when it shouldn't have been", fakeErrBefore, fakeErr.toString());
+        assertEquals("Stopwatch log was set when it shouldn't have been", fakeErrBefore, fakeErr.toString(StandardCharsets.UTF_8));
         //now it should get logged after running
         stopWatch.start();
         Thread.sleep(110);
@@ -173,7 +174,7 @@ public class LoggingStopWatchTest extends TestCase {
     }
 
     protected void checkExpectedLogWritten(String... textToFind) {
-        String fakeErrLog = fakeErr.toString();
+        String fakeErrLog = fakeErr.toString(StandardCharsets.UTF_8);
         for (String text : textToFind) {
             assertTrue("'" + text + "' not found in log " + fakeErrLog, fakeErrLog.indexOf(text) >= 0);
         }

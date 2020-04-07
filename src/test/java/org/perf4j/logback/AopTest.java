@@ -15,13 +15,13 @@
  */
 package org.perf4j.logback;
 
+import ch.qos.logback.classic.spi.ILoggingEvent;
 import org.perf4j.StopWatch;
 import org.perf4j.aop.ProfiledObject;
 import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
-import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import junit.framework.TestCase;
 
@@ -44,7 +44,7 @@ public class AopTest extends TestCase {
 
         configurator.doConfigure(getClass().getResource("logback.xml"));
 
-        ListAppender<LoggingEvent> listAppender = (ListAppender<LoggingEvent>) lc
+        ListAppender<ILoggingEvent> listAppender = (ListAppender<ILoggingEvent>) lc
                 .getLogger(StopWatch.DEFAULT_LOGGER_NAME).getAppender(
                         "listAppender");
 
@@ -52,15 +52,13 @@ public class AopTest extends TestCase {
         assertTrue(
                 "Expected tag not found in "
                         + listAppender.list.get(0).getMessage(),
-                listAppender.list.get(0).getMessage()
-                        .indexOf("tag[simpleTestDefaultTagStatic]") >= 0);
+                listAppender.list.get(0).getMessage().contains("tag[simpleTestDefaultTagStatic]"));
 
         new ProfiledObject().simpleTestUnprofiled(10);
         assertTrue(
                 "Expected tag not found in "
                         + listAppender.list.get(1).getMessage(),
-                listAppender.list.get(1).getMessage()
-                        .indexOf("tag[simpleTestUnprofiled]") >= 0);
+                listAppender.list.get(1).getMessage().contains("tag[simpleTestUnprofiled]"));
 
         assertEquals("Expected two logging events", 2, listAppender.list.size());
     }
